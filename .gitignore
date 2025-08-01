@@ -1,0 +1,22 @@
+# Virtual environments
+venv/
+
+# PyCharm project settings
+.idea/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Jupyter and notebook junk
+.ipynb_checkpoints/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Data file temp saves
+*.csv~
+*.log
