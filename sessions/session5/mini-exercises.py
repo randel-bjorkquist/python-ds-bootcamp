@@ -1,4 +1,119 @@
 # ----------------------------------------------------------------------------------------------------------------------
+# ### CSV-style for-loop challenge
+# You have a simulated CSV dataset stored in a list of strings, where the first line contains column headers and each
+# subsequent line contains data.
+#
+# You need to:
+# 1. Skip the header row.
+# 2. Split each data row into columns.
+# 3. Print the output in a clean, readable format.
+#
+# Starter Data
+# csv_data = [ "name,age,city"
+#             ,"Alice,30,New York"
+#             ,"Bob,25,Los Angeles"
+#             ,"Charlie,35,Chicago" ]
+#
+# Goal Output
+# Name: Alice | Age: 30 | City: New York
+# Name: Bob | Age: 25 | City: Los Angeles
+# Name: Charlie | Age: 35 | City: Chicago
+
+csv_data = [ "name,age,city"
+            ,"Alice,30,New York"
+            ,"Bob,25,Los Angeles"
+            ,"Charlie,35,Chicago" ]
+
+#--------------------------------------------------------------------------------------------------
+# My Solution ...
+#for row_index, row in enumerate(csv_data):
+#  if row_index == 0:
+#    column_headers = row.split(',')
+#    continue
+#  else:
+#    row_data = row.split(',')
+#
+#    for column_index, column_header in enumerate(column_headers):
+#      column_headers_length = len(column_headers) - 1
+#
+#      print( f"{column_header.title()}: {row_data[column_index]}"
+#            ,end = ' | ' if column_index < column_headers_length else '\n')
+#
+#--------------------------------------------------------------------------------------------------
+# ChatGPT's Solution
+#headers = [header.strip() for header in csv_data[0].split(',')]
+#
+#for row in csv_data[1:]:
+#  cells = [cell.strip() for cell in row.split(',')]
+#  pairs = zip(headers, cells)
+#
+#  print(' | '.join(f"{header.title()}: {cell}" for header, cell in pairs))
+
+#--------------------------------------------------------------------------------------------------
+# NOTE: alternative wording/variable names ...
+
+#keys = [header.strip() for header in csv_data[0].split(',')]
+#keys = [item.strip() for item in csv_data[0].split(',')]
+keys = [value.strip() for value in csv_data[0].split(',')]
+
+for row in csv_data[1:]:  # NOTE [1:] means to skip the first row
+  #cells = [cell.strip() for cell in row.split(',')]
+  #cells = [item.strip() for item in row.split(',')]
+  #cells = [value.strip() for value in row.split(',')]
+  values = [value.strip() for value in row.split(',')]
+
+  #pairs = zip(keys, cells)
+  pairs = zip(keys, values)
+ 
+  print(' | '.join(f"{key.title()}: {value}" for key, value in pairs))
+
+#--------------------------------------------------------------------------------------------------
+import csv, io
+
+reader = csv.reader(io.StringIO("\n".join(csv_data)))
+header = next(reader)
+for row in reader:
+  print(' | '.join(f"{key.title()}: {value}"  for key, value in zip(header, row)))
+
+
+quit()  # uncomment to exit and not execute the exercises below
+
+# ----------------------------------------------------------------------------------------------------------------------
+### Mini-Exercise 1 — Filtering Names
+# You have the following list:
+# names = ["Alice", "", "Bob", None, "Charlie", "", "Diana"]
+#
+# Task:
+# * Loop through the list and print each name in title case (first letter uppercase, rest lowercase).
+# * Skip over any empty strings ("") or None values.
+
+names = ["alice", "", "bob", None, "charlie", "", "diana"]
+
+for name in names:
+  if not name:
+    continue
+    
+  print(name.title())
+
+### Mini-Exercise 2 — Numbered Shopping List
+# You have the following list:
+# shopping_list = ["apples", "milk", "bread", "eggs"]
+#
+# Task:
+# * Print a numbered list of items starting from 1.
+# * The output should look like:
+#   1. apples
+#   2. milk
+#   3. bread
+#   4. eggs
+# * Use enumerate() to make it happen.
+
+shopping_list = ["apples", "milk", "bread", "eggs"]
+
+for index, item in enumerate(shopping_list, start = 1):
+  print(f"{index}. {item}")
+
+# ----------------------------------------------------------------------------------------------------------------------
 # Mini-Exercise – get_yes_no() Function
 # Write a function called get_yes_no(prompt) that:
 #     Loops until the user enters yes or no (case-insensitive).
@@ -56,6 +171,8 @@ def get_yes_no(prompt):
       print("Please enter 'yes' or 'no'")
 
 # ----------------------------------------------------------------------------------------------------------------------
+# NOTE: option given by ChatGPT - aligns with the rules created for the body temperature exercise below, but with a list
+#       vs lambda expressions
 def get_yes_no_v2(prompt):
   # Data-driven mapping: normalize input to a boolean
   yes_no_rules = { 'yes': True , 'y': True
@@ -70,6 +187,7 @@ def get_yes_no_v2(prompt):
     print("Please enter 'yes' or 'no'")
 
 # ----------------------------------------------------------------------------------------------------------------------
+# NOTE: option given by ChatGPT - aligns with the rules created for the body temperature exercise below, using lambdas
 def get_yes_no_v3(prompt):
   yes_no_rules = [ (lambda v: v in ('yes', 'y'), True)
                   ,(lambda v: v in ('no', 'n'), False) ]
@@ -84,6 +202,7 @@ def get_yes_no_v3(prompt):
     print("Please enter 'yes' or 'no'")
   
 # ----------------------------------------------------------------------------------------------------------------------
+# NOTE: option given by ChatGPT - reusable, more generic function, kind of like a template
 def ask(prompt, *, parser=None, choices=None, validate=None,
         default=None, normalize=str.strip, retry_msg=None):
   """
@@ -127,33 +246,26 @@ def ask(prompt, *, parser=None, choices=None, validate=None,
 #yes_no = get_yes_no_v2('Do you have a question? (yes/no): ')
 yes_no = get_yes_no_v3('Do you have a question? (yes/no): ')
 
-#if yes_no:
-#  print("Great, what's the question? ")
-#else:
-#  print("No worries; please come back when you do.")
-
 # NOTE: Use of ternary operator suggested by ChatGPT
 print("Great, what's the question?"
       if yes_no else
       "No worries; please come back when you do.")
 
-# Yes/No
+# ASK Template (Yes/No)
 yes = ask("Continue? (y/n): "
           ,choices = {'y': True, 'yes': True, 'n': False, 'no': False}
           ,normalize = lambda s: s.strip().lower())
 
-# Float in range
+# ASK Template (Float in range)
 temp = ask("Temp (F): "
            ,parser = float
            ,validate = lambda t: 90.0 <= t <= 110.0
            ,retry_msg = "Enter a number between 90 and 110.")
 
-# Int with default
+# ASK Template (Int with default)
 count = ask("How many items [default 3]: "
             ,parser = int
             ,default = 3)
-
-quit()
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Mini-Exercise (Asks the user for their temperature in Fahrenheit.)

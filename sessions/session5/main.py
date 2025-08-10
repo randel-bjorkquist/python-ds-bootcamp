@@ -36,3 +36,40 @@ if not is_admin:
   print("Access denied.")
 
 # ----------------------------------------------------------------------------------------------------------------------
+print()
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Loops (for and while)
+for color in ['red', 'green', 'blue']:
+  print(f"{color} is {color.capitalize()}")
+
+print()
+
+_0_to_5_by_1 = range(5)       # output: 0, 1, 2, 3, 4
+_0_to_6_by_2 = range(0, 8, 2) # output: 0, 2, 4, 6
+_0_to_8_by_2 = range(0, 9, 2) # output: 0, 2, 4, 6
+
+for i in range(5):
+  print(i)
+
+print()
+
+colors = ['red', 'green', 'blue']
+
+for index, color in enumerate(colors, start = 1):
+  print(f"{index:} {color}")
+
+print()
+
+person = {'name': 'Alice', 'age': 30, 'city': 'New York'}
+
+for key, value in person.items():
+  print(f"{key} -> {value}")
+
+names = ["Bob", "", "Alice", None, "Charlie"]
+
+for name in names:
+  if not name:    # short-cut, same as -> if name not in("", None):
+    continue
+  print(name)
+# ----------------------------------------------------------------------------------------------------------------------
