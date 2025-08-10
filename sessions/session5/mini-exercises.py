@@ -1,4 +1,106 @@
 # ----------------------------------------------------------------------------------------------------------------------
+#quit()  # uncomment to exit and not execute the exercises below
+
+# ----------------------------------------------------------------------------------------------------------------------
+#### Mini-Exercise
+# Ask the user to guess a secret number (between 1 and 10). Keep looping until they guess it.
+# * If the guess is too low, print "Too low!"
+# * If too high, print "Too high!"
+# * If correct, print "Correct!" and exit.
+import random
+
+"""
+A flexible input helper.
+- choices: dict of normalized input -> return value (e.g., {'y': True, 'yes': True})
+- parser: callable to convert input (e.g., int, float, lambda s: s.lower())
+- validate: callable(value) -> bool (e.g., lambda x: 90 <= x <= 110)
+- default: value returned if user submits empty input
+- normalize: callable to preprocess raw text (default: strip)
+"""
+def ask(prompt, *, parser=None, choices=None, validate=None,
+        default=None, normalize=str.strip, retry_msg=None):
+  
+  while True:
+    raw = input(prompt)
+    if raw == "" and default is not None:
+      return default
+    
+    text = normalize(raw) if normalize else raw
+    
+    if choices is not None:
+      if text in choices:
+        return choices[text]
+      print(retry_msg or "Please enter one of: " + ", ".join(choices.keys()))
+      continue
+    
+    if parser is not None:
+      try:
+        val = parser(text)
+      except Exception:
+        print(retry_msg or "Invalid input. Please try again.")
+        continue
+      
+      if validate and not validate(val):
+        print(retry_msg or "Value not in accepted range. Please try again.")
+        continue
+      return val
+    
+    print(retry_msg or "Please enter a valid value.")
+
+# My Solution -------------------------------------------------------------------------------------
+print("My Solution ....")
+
+continue_playing = True
+secret_number = random.randint(1, 10)
+
+while continue_playing:
+  correct_guess = False
+  guess_number = ask("Choose a number between 1 and 10: "
+                     ,parser = int
+                     ,validate = lambda t: 1 <= t <= 10 )
+  
+  if guess_number < secret_number:
+    print("Too low!")
+  elif guess_number > secret_number:
+    print("Too high!")
+  else:
+    print("Correct!")
+    correct_guess = True
+    continue_playing = ask("Play again? (y/n): "
+                           ,choices = {'y': True, 'yes': True, 'n': False, 'no': False}
+                           ,normalize = lambda s: s.strip().lower())
+  
+  if correct_guess and continue_playing:
+    secret_number = random.randint(1, 10)
+
+# ChatGPT's Solution ------------------------------------------------------------------------------
+print()
+print("ChatGPT's Solution ....")
+
+YES_NO = {'y': True, 'yes': True, 'n': False, 'no': False}
+
+def play_round():
+    secret = random.randint(1, 10)
+    while True:
+        guess = ask("Choose a number (1–10): ",
+                    parser = int,
+                    validate = lambda t: 1 <= t <= 10,
+                    retry_msg = "Enter a number between 1 and 10.")
+        if guess < secret:
+            print("Too low!")
+        elif guess > secret:
+            print("Too high!")
+        else:
+            print("Correct!")
+            return ask("Play again? (y/n): ",
+                       choices = YES_NO,
+                       normalize = lambda s: s.strip().lower())
+
+while True:
+    if not play_round():
+        break
+
+# ----------------------------------------------------------------------------------------------------------------------
 # ### CSV-style for-loop challenge
 # You have a simulated CSV dataset stored in a list of strings, where the first line contains column headers and each
 # subsequent line contains data.
@@ -74,9 +176,6 @@ reader = csv.reader(io.StringIO("\n".join(csv_data)))
 header = next(reader)
 for row in reader:
   print(' | '.join(f"{key.title()}: {value}"  for key, value in zip(header, row)))
-
-
-quit()  # uncomment to exit and not execute the exercises below
 
 # ----------------------------------------------------------------------------------------------------------------------
 ### Mini-Exercise 1 — Filtering Names

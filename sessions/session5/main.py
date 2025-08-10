@@ -72,4 +72,15 @@ for name in names:
   if not name:    # short-cut, same as -> if name not in("", None):
     continue
   print(name)
+
+print()
+
 # ----------------------------------------------------------------------------------------------------------------------
+### While Loops Overview
+# Basic syntax:
+
+count = 0
+
+while count < 5:
+    print(count)
+    count += 1
