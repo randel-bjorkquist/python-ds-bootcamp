@@ -324,7 +324,7 @@ csv_data = [ "name,age,city"
 ```
 
 Goal Output
-```python
+```markdown
 Name: Alice | Age: 30 | City: New York
 Name: Bob | Age: 25 | City: Los Angeles
 Name: Charlie | Age: 35 | City: Chicago    
